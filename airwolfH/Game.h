@@ -28,6 +28,8 @@ private:
 	void update(sf::Time t_deltaTime);
 	void render();
 	
+	void animate();
+
 	void setupFontAndText();
 	void setupSprite();
 
@@ -43,6 +45,11 @@ private:
 
 	sf::Texture m_heloTexture;// helo texture
 	sf::Sprite m_heloSprite;// helo sprite
+
+	int m_currentFrame = 0;// frame no
+	float m_framecounter = 0.0f;// frame counter
+	float m_frameIncrement = 0.25f;// frame increment 
+
 
 };
 
