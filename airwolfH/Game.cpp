@@ -77,6 +77,10 @@ void Game::processEvents()
 		{
 			processKeys(newEvent);
 		}
+		if (sf::Event::MouseButtonReleased == newEvent.type)
+		{
+			processMouse(newEvent);
+		}
 	}
 }
 
@@ -104,6 +108,7 @@ void Game::update(sf::Time t_deltaTime)
 		m_window.close();
 	}
 	animate();
+	move();
 }
 
 /// <summary>
@@ -115,6 +120,30 @@ void Game::render()
 	m_window.draw(m_welcomeMessage);
 	m_window.draw(m_heloSprite);
 	m_window.display();
+}
+
+void Game::processMouse(sf::Event t_event)
+{
+	sf::Vector2f heading{0.0f, 0.0f}; // flight path
+	float lenght;
+	m_target.x = static_cast<float>( t_event.mouseButton.x);
+	m_target.y = static_cast<float>(t_event.mouseButton.y);
+	heading = m_target - m_location ;
+	if (heading.x < 0)
+	{
+		m_direction = Direction::Left;
+		m_heloSprite.setScale(-1.0f, 1.0f);
+	}
+	else
+	{
+		m_direction = Direction::Right;
+		m_heloSprite.setScale(1.0f, 1.0f);
+	}
+	lenght = std::sqrtf( heading.x * heading.x + heading.y * heading.y);
+	m_velocity = heading / lenght;
+	m_velocity = m_velocity * m_speed;
+	m_sound.setPitch(1.0f);
+
 }
 
 void Game::animate()
@@ -130,6 +159,30 @@ void Game::animate()
 		// frame three m_heloSprite.setTextureRect(sf::IntRect{0, 128, 180, 64});
 		// frame four  m_heloSprite.setTextureRect(sf::IntRect{0, 196, 180, 64});
 	}
+}
+
+void Game::move()
+{
+	if (m_direction != Direction::None)
+	{
+		m_location += m_velocity;
+
+
+		if (Direction::Left == m_direction &&
+			m_target.x > m_location.x)
+		{
+			m_direction = Direction::None;
+			m_sound.setPitch(0.5f);
+		}
+		if (Direction::Right == m_direction &&
+			m_target.x < m_location.x)
+		{
+			m_direction = Direction::None;
+			m_sound.setPitch(0.5f);
+		}
+	}
+
+	m_heloSprite.setPosition(m_location);
 }
 
 /// <summary>
@@ -172,4 +225,11 @@ void Game::setupSprite()
 	m_heloSprite.setTexture(m_heloTexture);
 	m_heloSprite.setPosition(m_location);
 	m_heloSprite.setTextureRect(sf::IntRect{0, 0, 180, 64});
+	m_heloSprite.setOrigin(90.0f, 32.0f);
+
+	m_soundbuffer.loadFromFile("ASSETS\\SOUNDS\\helicopter.wav");
+	m_sound.setBuffer(m_soundbuffer);
+	m_sound.play();
+	m_sound.setPitch(0.5f);
+	m_sound.setLoop(true);
 }
