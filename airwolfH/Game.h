@@ -38,6 +38,12 @@ private:
 	sf::Sprite m_logoSprite; // sprite used for sfml logo
 	bool m_exitGame; // control exiting game
 
+
+	sf::Vector2f m_location{200.0f, 200.0f}; // location of helo
+
+	sf::Texture m_heloTexture;// helo texture
+	sf::Sprite m_heloSprite;// helo sprite
+
 };
 
 #endif // !GAME_HPP

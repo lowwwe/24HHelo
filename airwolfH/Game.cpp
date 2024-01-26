@@ -112,7 +112,7 @@ void Game::render()
 {
 	m_window.clear(sf::Color::White);
 	m_window.draw(m_welcomeMessage);
-	m_window.draw(m_logoSprite);
+	m_window.draw(m_heloSprite);
 	m_window.display();
 }
 
@@ -148,4 +148,12 @@ void Game::setupSprite()
 	}
 	m_logoSprite.setTexture(m_logoTexture);
 	m_logoSprite.setPosition(300.0f, 180.0f);
+
+	if (!m_heloTexture.loadFromFile("ASSETS\\IMAGES\\helicopter.png"))
+	{
+		std::cout << "error message";
+	}
+	m_heloSprite.setTexture(m_heloTexture);
+	m_heloSprite.setPosition(m_location);
+	m_heloSprite.setTextureRect(sf::IntRect{0, 0, 180, 64});
 }
